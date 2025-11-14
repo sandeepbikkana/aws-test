@@ -1,0 +1,32 @@
+# node_modules should NEVER be copied (Docker will install deps)
+node_modules
+
+# Next.js caches
+.next
+out
+.next/cache
+
+# Env files
+.env
+.env.local
+.env.development
+.env.production
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Git and configs
+.git
+.gitignore
+
+# Editor
+.vscode
+.idea
+
+# Logs
+*.log
+
+# Docker files (not needed inside the image)
+Dockerfile
+docker-compose.yml
