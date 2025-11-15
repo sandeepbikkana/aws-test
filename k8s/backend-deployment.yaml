@@ -61,12 +61,12 @@ spec:
           ports:
             - containerPort: 1337
 
-          # Load ALL values from the secret
+          # Load ALL Strapi secrets from one source
           envFrom:
             - secretRef:
                 name: strapi-secrets
 
-          # Override specific database values (Strapi requires these explicitly)
+          # Override only DB config (hostname, port)
           env:
             - name: DATABASE_CLIENT
               value: "postgres"
@@ -74,3 +74,47 @@ spec:
               value: "postgres"
             - name: DATABASE_PORT
               value: "5432"
+
+            # Explicitly map required Strapi keys from *strapi-secrets*
+            - name: APP_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: APP_KEYS
+
+            - name: API_TOKEN_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: API_TOKEN_SALT
+
+            - name: ADMIN_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: ADMIN_JWT_SECRET
+
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: JWT_SECRET
+
+            # Optional extra DB config (already loaded via envFrom)
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: DATABASE_USERNAME
+
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: DATABASE_PASSWORD
+
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-secrets
+                  key: DATABASE_NAME
