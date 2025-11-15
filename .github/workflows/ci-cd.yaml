@@ -1,4 +1,4 @@
-name: Build, Scan, Deploy to AWS EKS
+name: Build, Scan, Deploy to AWS EKS.
 
 on:
   push:
