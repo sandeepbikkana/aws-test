@@ -57,10 +57,16 @@ spec:
     spec:
       containers:
         - name: backend
-          #image: 2541f4172929e9aea5fe99ed80d859a36cf7c0f1
           image: 730335385079.dkr.ecr.ap-south-1.amazonaws.com/backend-ecr-repo:{{TAG}}
           ports:
             - containerPort: 1337
+
+          # Load ALL values from the secret
+          envFrom:
+            - secretRef:
+                name: strapi-secrets
+
+          # Override specific database values (Strapi requires these explicitly)
           env:
             - name: DATABASE_CLIENT
               value: "postgres"
@@ -68,40 +74,3 @@ spec:
               value: "postgres"
             - name: DATABASE_PORT
               value: "5432"
-            - name: DATABASE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: DATABASE_USERNAME
-            - name: DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: DATABASE_PASSWORD
-            - name: DATABASE_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: DATABASE_NAME
-
-            # Strapi required keys
-            - name: APP_KEYS
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: APP_KEYS
-            - name: API_TOKEN_SALT
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: API_TOKEN_SALT
-            - name: ADMIN_JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: ADMIN_JWT_SECRET
-            - name: JWT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: strapi-secrets
-                  key: JWT_SECRET
