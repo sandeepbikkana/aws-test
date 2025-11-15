@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: strapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: strapi
+  template:
+    metadata:
+      labels:
+        app: strapi
+    spec:
+      containers:
+        # ------------------------
+        # Strapi API
+        # ------------------------
+        - name: strapi
+          image: gcr.io/gtmlabs/backend:{{TAG}}
+          ports:
+            - containerPort: 1337
+          env:
+            - name: NODE_ENV
+              value: "production"
+
+            - name: DATABASE_CLIENT
+              value: "postgres"
+            - name: DATABASE_HOST
+              value: "127.0.0.1"
+            - name: DATABASE_PORT
+              value: "5432"
+
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: DATABASE_NAME
+
+            - name: APP_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: APP_KEYS
+            - name: API_TOKEN_SALT
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: API_TOKEN_SALT
+            - name: ADMIN_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: ADMIN_JWT_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: strapi-staging-secrets
+                  key: JWT_SECRET
+
+        # ------------------------
+        # Cloud SQL Auth Proxy
+        # ------------------------
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.33.5
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances=YOUR_PROJECT:REGION:STAGING_CLOUDSQL_INSTANCE=tcp:5432"
+          securityContext:
+            runAsNonRoot: true
