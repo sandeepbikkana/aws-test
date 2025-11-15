@@ -12,8 +12,8 @@ jobs:
     env:
       AWS_REGION: ap-south-1
       EKS_CLUSTER: test-eks-cluster
-      ECR_BACKEND: backend-ecr-repo
-      ECR_FRONTEND: frontend-ecr-repo
+      ECR_BACKEND: 730335385079.dkr.ecr.ap-south-1.amazonaws.com/backend-ecr-repo
+      ECR_FRONTEND: 730335385079.dkr.ecr.ap-south-1.amazonaws.com/frontend-ecr-repo
       TAG: ${{ github.sha }}
 
     steps:
