@@ -93,7 +93,7 @@ spec:
             - name: API_TOKEN_SALT
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: strapi-secrets
                   key: API_TOKEN_SALT
             - name: ADMIN_JWT_SECRET
               valueFrom:
